@@ -26,7 +26,6 @@ class StoreMeetingRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['nullable'],
             'school_id' => ['required', 'numeric', 'exists:schools,id'],
             'user_id' => ['required', 'numeric', 'exists:users,id'],
             'topic' => ['required', 'string'],

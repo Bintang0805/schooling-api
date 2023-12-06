@@ -59,7 +59,7 @@ class MeetingController extends Controller {
         $data['link'] = $zoomMeeting['data']['join_url'];
         $data['zoom_meeting_id'] = $zoomMeeting['data']['id'];
 
-        Meeting::updateOrInsert(["id" => $data['id']], $data);
+        Meeting::create($data);
 
         return response()->json(['message' => 'Meeting saved successfully.']);
 
