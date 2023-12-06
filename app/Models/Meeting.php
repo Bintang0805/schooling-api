@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Meeting extends Model
-{
+class Meeting extends Model {
     use HasFactory;
 
     protected $table = "meetings";
@@ -22,6 +21,7 @@ class Meeting extends Model
         "status",
         "link",
         "user_id",
+        'zoom_meeting_id'
     ];
 
     protected $guarded = [
@@ -42,8 +42,7 @@ class Meeting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function school(): BelongsTo
-    {
+    public function school(): BelongsTo {
         return $this->belongsTo(School::class, 'school_id', 'id');
     }
 
@@ -52,8 +51,7 @@ class Meeting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): BelongsTo
-    {
+    public function user(): BelongsTo {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
@@ -62,8 +60,7 @@ class Meeting extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function meetingDetails(): HasMany
-    {
+    public function meetingDetails(): HasMany {
         return $this->hasMany(MeetingDetail::class, 'meeting_id', 'id');
     }
 

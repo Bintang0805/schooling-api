@@ -59,6 +59,7 @@ class MeetingController extends Controller {
         $data['link'] = $zoomMeeting['data']['join_url'];
         $data['zoom_meeting_id'] = $zoomMeeting['data']['id'];
 
+        // dd($data);
         Meeting::create($data);
 
         return response()->json(['message' => 'Meeting saved successfully.']);
@@ -102,6 +103,8 @@ class MeetingController extends Controller {
                 'user_id' => $participant
             ]);
         }
+
+        return response()->json(['message' => 'Participants added successfully.']);
     }
 
     public function deleteParticipants(Request $request, Meeting $meeting)
@@ -112,5 +115,8 @@ class MeetingController extends Controller {
                 'user_id' => $participant
             ])->delete();
         }
+
+        return response()->json(['message' => 'Participants deleted successfully.']);
+
     }
 }
