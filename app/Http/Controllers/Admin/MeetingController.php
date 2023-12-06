@@ -17,6 +17,10 @@ class MeetingController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
+        Meeting::where([['start_date', '<=', now()], ['status', "!=", 'Finished']])->update([
+            'status' => 'On Going'
+        ]);
+
         $meetings = Meeting::with("user")->get();
         $schools = School::all();
 
@@ -107,8 +111,7 @@ class MeetingController extends Controller {
         return response()->json(['message' => 'Participants added successfully.']);
     }
 
-    public function deleteParticipants(Request $request, Meeting $meeting)
-    {
+    public function deleteParticipants(Request $request, Meeting $meeting) {
         foreach($request->participants as $participant) {
             MeetingDetail::where([
                 'meeting_id' => $meeting->id,
@@ -118,5 +121,13 @@ class MeetingController extends Controller {
 
         return response()->json(['message' => 'Participants deleted successfully.']);
 
+    }
+
+    public function finishMeeting(Meeting $meeting) {
+        $meeting->update([
+            'status' => 'Finished'
+        ]);
+
+        return response()->json(['message' => 'Meeting is finished']);
     }
 }

@@ -41,6 +41,7 @@ Route::prefix("admin")->group(function () {
 
     Route::post("meeting-details/add-participants/{meeting}", [MeetingController::class, "addParticipants"]);
     Route::post("meeting-details/delete-participants/{meeting}", [MeetingController::class, "deleteParticipants"]);
+    Route::patch("meetings/finished/{meeting}", [MeetingController::class, "finishMeeting"]);
 
 
     Route::patch("leave-requests/update-status", [LeaveRequestController::class, "updateStatus"]);
