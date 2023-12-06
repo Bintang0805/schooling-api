@@ -34,17 +34,14 @@ class MeetingController extends Controller {
      */
     public function store(StoreMeetingRequest $request) {
         $data = $request->validated();
-        // dd($data);
 
         $zoomMeeting = Zoom::createMeeting([
             "agenda" => $data['topic'],
             "topic" => $data['topic'],
             "type" => 1, // 1 => instant, 2 => scheduled, 3 => recurring with no fixed time, 8 => recurring with fixed time
-            // "duration" => 60, // in minutes
             "timezone" => 'Asia/Jakarta', // set your timezone
             "password" => $data['password'],
             "start_time" => $data['start_date'], // set your start time
-            // "template_id" => 'set your template id', // set your template id  Ex: "Dv4YdINdTk+Z5RToadh5ug==" from https://marketplace.zoom.us/docs/api-reference/zoom-api/meetings/meetingtemplates
             "pre_schedule" => false,  // set true if you want to create a pre-scheduled meeting
             // "schedule_for" => 'ikhsanbintang1105@gmail.com', // set your schedule for
             "settings" => [
@@ -61,10 +58,11 @@ class MeetingController extends Controller {
         ]);
 
         $data['link'] = $zoomMeeting['data']['join_url'];
+        $data['zoom_meeting_id'] = $zoomMeeting['data']['id'];
 
         Meeting::updateOrInsert(["id" => $data['id']], $data);
 
-        return response()->json(['message' => 'Meeting save successfully.']);
+        return response()->json(['message' => 'Meeting saved successfully.']);
 
     }
 
@@ -79,27 +77,13 @@ class MeetingController extends Controller {
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Meeting  $meeting
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateMeetingRequest $request, Meeting $meeting) {
-        $data = $request->validated();
-
-        $meeting->update($data);
-
-        return response()->json(['meeting' => $meeting, 'message' => 'Meeting updated successfully.']);
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Meeting  $meeting
      * @return \Illuminate\Http\Response
      */
     public function destroy(Meeting $meeting) {
+        Zoom::deleteMeeting($meeting->zoom_meeting_id);
         $meeting->delete();
 
         return response()->json(['message' => 'Meeting deleted successfully.']);

@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('meetings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("school_id");
-            // $table->foreignId(School::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->text("zoom_meeting_id");
             $table->string("topic");
             $table->string("description");
             $table->dateTime("start_date");
