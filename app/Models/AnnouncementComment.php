@@ -25,7 +25,7 @@ class AnnouncementComment extends Model
      */
     public function annoucement(): BelongsTo
     {
-        return $this->belongsTo(annoucement::class, 'announcement_id', 'id');
+        return $this->belongsTo(Announcement::class, 'announcement_id', 'id');
     }
 
     /**

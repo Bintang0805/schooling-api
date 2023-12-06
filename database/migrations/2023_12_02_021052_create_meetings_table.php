@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\School;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -16,11 +17,12 @@ return new class extends Migration
         Schema::create('meetings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("school_id");
+            // $table->foreignId(School::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string("topic");
             $table->string("description");
             $table->dateTime("start_date");
             $table->string("password");
-            $table->enum("status", ["Coming Soon", "On Going", "Finished"]);
+            $table->enum("status", ["Coming Soon", "On Going", "Finished"])->default("Coming Soon");
             $table->string("link");
             $table->unsignedBigInteger("user_id");
             $table->timestamps();
