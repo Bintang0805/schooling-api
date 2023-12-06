@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\School;
 use App\Models\Meeting;
+use Illuminate\Http\Request;
+use App\Models\MeetingDetail;
 use Jubaer\Zoom\Facades\Zoom;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMeetingRequest;
-use App\Http\Requests\UpdateMeetingRequest;
-use App\Models\School;
-use App\Models\User;
-use Illuminate\Http\Request;
 
 class MeetingController extends Controller {
     /**
@@ -87,5 +86,31 @@ class MeetingController extends Controller {
         $meeting->delete();
 
         return response()->json(['message' => 'Meeting deleted successfully.']);
+    }
+
+    public function addParticipants(Request $request, Meeting $meeting) {
+        foreach($request->participants as $participant) {
+            $joined = MeetingDetail::where(['meeting_id' => $meeting->id,
+                'user_id' => $participant])->count();
+
+            if($joined > 0) {
+                continue;
+            }
+
+            MeetingDetail::create([
+                'meeting_id' => $meeting->id,
+                'user_id' => $participant
+            ]);
+        }
+    }
+
+    public function deleteParticipants(Request $request, Meeting $meeting)
+    {
+        foreach($request->participants as $participant) {
+            MeetingDetail::where([
+                'meeting_id' => $meeting->id,
+                'user_id' => $participant
+            ])->delete();
+        }
     }
 }

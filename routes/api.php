@@ -32,12 +32,16 @@ Route::prefix("admin")->group(function () {
     Route::apiResource('schools', SchoolController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('meetings', MeetingController::class);
-    Route::apiResource('meeting-details', MeetingDetailController::class);
+    // Route::apiResource('meeting-details', MeetingDetailController::class);
     Route::apiResource('leave-requests', LeaveRequestController::class);
     Route::apiResource('events', EventController::class);
     Route::apiResource('announcements', AnnouncementController::class);
     Route::apiResource('announcement-comments', AnnouncementCommentController::class);
     Route::apiResource('holidays', HolidayController::class);
+
+    Route::post("meeting-details/add-participants/{meeting}", [MeetingController::class, "addParticipants"]);
+    Route::post("meeting-details/delete-participants/{meeting}", [MeetingController::class, "deleteParticipants"]);
+
 
     Route::patch("leave-requests/update-status", [LeaveRequestController::class, "updateStatus"]);
 });
