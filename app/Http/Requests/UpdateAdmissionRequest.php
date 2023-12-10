@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class UpdateAdmissionRequest extends FormRequest
 {
@@ -13,7 +15,18 @@ class UpdateAdmissionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
+        // return auth()->check();
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+
+        throw new HttpResponseException(response()->json([
+            'success'   => false,
+            'message'   => 'Validation errors',
+            'data'      => $validator->errors()
+        ]));
     }
 
     /**
@@ -24,7 +37,16 @@ class UpdateAdmissionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user_id' => ['nullable', 'numeric', 'exists:users,id'],
+            'parent_id' => ['nullable', 'numeric', 'exists:users,id'],
+            'course_id' => ['nullable', 'numeric', 'exists:courses,id'],
+            'previous_school_year' => ['nullable', 'string'],
+            'physical_disabilities' => ['nullable', 'string'],
+            'previous_school_name' => ['nullable', 'string'],
+            'document' => ['nullable', 'file', 'mimes:png,jpg,jpeg,pdf'],
+            'bank_name' => ['nullable', 'string'],
+            'bank_account_number' => ['nullable', 'numeric'],
+            'note' => ['nullable', 'string'],
         ];
     }
 }

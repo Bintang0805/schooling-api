@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\MeetingDetailController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\AdmissionController;
 use App\Models\AnnouncementComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,12 +33,14 @@ Route::prefix("admin")->group(function () {
     Route::apiResource('schools', SchoolController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('meetings', MeetingController::class);
-    // Route::apiResource('meeting-details', MeetingDetailController::class);
+    
     Route::apiResource('leave-requests', LeaveRequestController::class);
     Route::apiResource('events', EventController::class);
     Route::apiResource('announcements', AnnouncementController::class);
     Route::apiResource('announcement-comments', AnnouncementCommentController::class);
     Route::apiResource('holidays', HolidayController::class);
+    Route::apiResource('admissions', AdmissionController::class);
+    Route::patch("admissions/change-status/{admission}", [AdmissionController::class, "changeStatus"]);
 
     Route::post("meeting-details/add-participants/{meeting}", [MeetingController::class, "addParticipants"]);
     Route::post("meeting-details/delete-participants/{meeting}", [MeetingController::class, "deleteParticipants"]);

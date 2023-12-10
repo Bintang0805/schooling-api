@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admission;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreAdmissionRequest;
 use App\Http\Requests\UpdateAdmissionRequest;
-use App\Models\Admission;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class AdmissionController extends Controller
 {
@@ -29,7 +32,21 @@ class AdmissionController extends Controller
      */
     public function store(StoreAdmissionRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        if ($data['user_id'] == $data['parent_id'])
+            (
+                throw new HttpResponseException(response()->json([
+                    'success' => false,
+                    'message' => 'User and Parent ID is same',
+                ]))
+            );
+
+        $data['document'] = $request->file('document')->store('admission/documents');
+
+        Admission::create($data);
+
+        return response()->json(['message' => 'Admission successfully created']);
     }
 
     /**
@@ -53,6 +70,22 @@ class AdmissionController extends Controller
     public function update(UpdateAdmissionRequest $request, Admission $admission)
     {
 
+        $data = $request->validated();
+
+        if ($data['user_id'] == $data['parent_id'])
+            (
+                throw new HttpResponseException(response()->json([
+                    'success' => false,
+                    'message' => 'User and Parent ID is same',
+                ]))
+            );
+
+        Storage::delete($admission->document);
+        $data['document'] = $request->file('document')->store('admission/documents');
+
+        $admission->update($data);
+
+        return response()->json(['message' => 'Admission successfully created']);
     }
 
     /**
@@ -63,8 +96,36 @@ class AdmissionController extends Controller
      */
     public function destroy(Admission $admission)
     {
+        $admission_document_link = $admission->document;
+
         $admission->delete();
 
+        Storage::delete($admission_document_link);
+
         return response()->json(['message' => 'Admission deleted successfuly']);
+    }
+
+    public function changeStatus(Request $request, Admission $admission)
+    {
+        try {
+            $data = $request->validate([
+                'status' => ['required', 'string', 'in:Pending,Approved,Rejected'],
+            ]);
+
+        } catch (ValidationException $e) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => 'Validation errors',
+                'data' => $e->errors()
+            ]));
+        }
+
+        if($admission->status == $data['status']){
+            return response()->json(['message' => 'Meeting is not changing.']);
+        }
+
+        $admission->update(['status' => $data['status']]);
+
+        return response()->json(['message' => "Meeting is {$data['status']}"]);
     }
 }

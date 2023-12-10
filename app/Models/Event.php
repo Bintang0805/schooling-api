@@ -24,6 +24,17 @@ class Event extends Model
         "id"
     ];
 
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'start_at' => 'datetime',
+        'end_at' => 'datetime',
+    ];
+
     /**
      * Get the school that owns the Event
      *
