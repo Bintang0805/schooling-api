@@ -85,7 +85,10 @@ class AdmissionController extends Controller
                 ]))
             );
 
-        Storage::delete($admission->document);
+        if(isset($data['document'])){
+            Storage::delete($admission->document);
+        }
+
         $data['document'] = $request->file('document')->store('admission/documents');
 
         $admission->update($data);
