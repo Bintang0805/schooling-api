@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admission;
-use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreAdmissionRequest;
@@ -39,13 +38,12 @@ class AdmissionController extends Controller
     {
         $data = $request->validated();
 
-        if ($data['user_id'] == $data['parent_id'])
-            (
-                throw new HttpResponseException(response()->json([
-                    'success' => false,
-                    'message' => 'User and Parent ID is same',
-                ]))
-            );
+        if ($data['user_id'] == $data['parent_id']) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => 'User and Parent ID is same',
+            ]));
+        }
 
         $data['document'] = $request->file('document')->store('admission/documents');
 
@@ -77,15 +75,20 @@ class AdmissionController extends Controller
 
         $data = $request->validated();
 
-        if ($data['user_id'] == $data['parent_id'])
-            (
-                throw new HttpResponseException(response()->json([
-                    'success' => false,
-                    'message' => 'User and Parent ID is same',
-                ]))
-            );
+        if (
+            (isset($data['user_id']) && isset($data['user_id']) && $data['user_id'] === $data['parent_id']) ||
+            (isset($data['parent_id']) && ! isset($data['user_id']) && $admission->user_id === $data['parent_id']) ||
+            (isset($data['user_id']) && ! isset($data['parent_id']) && $data['user_id'] === $admission->parent_id)
+        ) {
+            throw new HttpResponseException(response()->json([
+                'success' => false,
+                'message' => 'User and Parent ID is same',
+            ]));
+        }
 
-        if(isset($data['document'])){
+
+
+        if (isset($data['document'])) {
             Storage::delete($admission->document);
         }
 
@@ -93,7 +96,7 @@ class AdmissionController extends Controller
 
         $admission->update($data);
 
-        return response()->json(['message' => 'Admission successfully created']);
+        return response()->json(['message' => 'Admission successfully updated']);
     }
 
     /**
