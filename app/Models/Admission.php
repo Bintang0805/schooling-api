@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Course;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -59,5 +60,10 @@ class Admission extends Model
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class, 'course_id', 'id');
+    }
+
+    public function getDocumentLink()
+    {
+        return Storage::url($this->document);
     }
 }

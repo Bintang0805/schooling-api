@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admission;
+use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreAdmissionRequest;
 use App\Http\Requests\UpdateAdmissionRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class AdmissionController extends Controller
 {
@@ -20,6 +21,10 @@ class AdmissionController extends Controller
     public function index()
     {
         $admissions = Admission::get();
+
+        $admissions->map(function ($admission, $key) {
+            $admission->document = $admission->getDocumentLink();
+        });
 
         return response()->json(['admissions' => $admissions]);
     }
@@ -120,7 +125,7 @@ class AdmissionController extends Controller
             ]));
         }
 
-        if($admission->status == $data['status']){
+        if ($admission->status == $data['status']) {
             return response()->json(['message' => 'Meeting is not changing.']);
         }
 
