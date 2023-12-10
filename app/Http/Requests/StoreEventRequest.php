@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class StoreMeetingRequest extends FormRequest
+class StoreEventRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,7 +17,6 @@ class StoreMeetingRequest extends FormRequest
     {
         return true;
         // return auth()->check();
-
     }
 
     public function failedValidation(Validator $validator)
@@ -45,12 +44,10 @@ class StoreMeetingRequest extends FormRequest
     {
         return [
             'school_id' => ['required', 'numeric', 'exists:schools,id'],
-            'user_id' => ['required', 'numeric', 'exists:users,id'],
-            'topic' => ['required', 'string'],
-            'password' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'start_date' => ['required', 'date'],
-            'status' => ['nullable', 'in:Coming Soon,On Going,Finished'],
+            'name' => ['required', 'string'],
+            'start_at' => ['required', 'date'],
+            'end_at' => ['required', 'date'],
+            'color' => ['required', 'string'],
         ];
     }
 }

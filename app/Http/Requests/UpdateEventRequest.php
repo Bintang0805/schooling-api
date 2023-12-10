@@ -6,18 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class StoreMeetingRequest extends FormRequest
+class UpdateEventRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
         // return auth()->check();
-
     }
 
     public function failedValidation(Validator $validator)
@@ -44,13 +38,11 @@ class StoreMeetingRequest extends FormRequest
     public function rules()
     {
         return [
-            'school_id' => ['required', 'numeric', 'exists:schools,id'],
-            'user_id' => ['required', 'numeric', 'exists:users,id'],
-            'topic' => ['required', 'string'],
-            'password' => ['required', 'string'],
-            'description' => ['required', 'string'],
-            'start_date' => ['required', 'date'],
-            'status' => ['nullable', 'in:Coming Soon,On Going,Finished'],
+            'school_id' => ['nullable', 'numeric', 'exists:schools,id'],
+            'name' => ['nullable', 'string'],
+            'start_at' => ['nullable', 'date'],
+            'end_at' => ['nullable', 'date'],
+            'color' => ['nullable', 'string'],
         ];
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreEventRequest;
+use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use Illuminate\Http\Request;
 
@@ -15,17 +17,9 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $events = Event::get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json(['events' => $events]);
     }
 
     /**
@@ -34,9 +28,13 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEventRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        Event::create($data);
+
+        return response()->json(['message' => 'Event added successfully.']);
     }
 
     /**
@@ -47,18 +45,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Event $event)
-    {
-        //
+        return response()->json(['event' => $event]);
     }
 
     /**
@@ -68,9 +55,13 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(UpdateEventRequest $request, Event $event)
     {
-        //
+        $data = $request->validated();
+
+        $event->update($data);
+
+        return response()->json(['message' => 'Event updated successfully.']);
     }
 
     /**
@@ -81,6 +72,8 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event->delete();
+
+        return response()->json(['message' => 'Event deleted successfully.']);
     }
 }

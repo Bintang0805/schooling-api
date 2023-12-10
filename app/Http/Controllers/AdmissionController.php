@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAdmissionRequest;
+use App\Http\Requests\UpdateAdmissionRequest;
 use App\Models\Admission;
 use Illuminate\Http\Request;
 
@@ -14,17 +16,9 @@ class AdmissionController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $admissions = Admission::get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json(['admissions' => $admissions]);
     }
 
     /**
@@ -33,7 +27,7 @@ class AdmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAdmissionRequest $request)
     {
         //
     }
@@ -46,18 +40,7 @@ class AdmissionController extends Controller
      */
     public function show(Admission $admission)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Admission  $admission
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Admission $admission)
-    {
-        //
+        return response()->json(['admission' => $admission]);
     }
 
     /**
@@ -67,9 +50,9 @@ class AdmissionController extends Controller
      * @param  \App\Models\Admission  $admission
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Admission $admission)
+    public function update(UpdateAdmissionRequest $request, Admission $admission)
     {
-        //
+
     }
 
     /**
@@ -80,6 +63,8 @@ class AdmissionController extends Controller
      */
     public function destroy(Admission $admission)
     {
-        //
+        $admission->delete();
+
+        return response()->json(['message' => 'Admission deleted successfuly']);
     }
 }
